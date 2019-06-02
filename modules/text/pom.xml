@@ -11,25 +11,25 @@
     </parent>
     <packaging>pom</packaging>
 
-    <artifactId>eventbus</artifactId>
+    <artifactId>text</artifactId>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.voxelgameslib</groupId>
-                <artifactId>eventbus-api</artifactId>
+                <artifactId>text-api</artifactId>
                 <version>3.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.voxelgameslib</groupId>
-                <artifactId>eventbus-impl-default</artifactId>
+                <artifactId>text-impl-default</artifactId>
                 <version>3.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>eventbus-api</module>
-        <module>eventbus-impl-default</module>
+        <module>text-api</module>
+        <module>text-impl-default</module>
     </modules>
 </project>
