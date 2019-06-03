@@ -5,21 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.voxelgameslib</groupId>
-        <artifactId>game</artifactId>
+        <artifactId>util</artifactId>
         <version>3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>game-impl-default</artifactId>
+    <artifactId>util-api</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.voxelgameslib</groupId>
-            <artifactId>game-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
 </project>

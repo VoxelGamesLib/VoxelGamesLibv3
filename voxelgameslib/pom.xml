@@ -23,6 +23,15 @@
             <artifactId>game-impl-default</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.voxelgameslib</groupId>
+            <artifactId>util-api</artifactId>
+            <version>3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

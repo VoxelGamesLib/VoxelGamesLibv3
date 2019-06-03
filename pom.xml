@@ -47,6 +47,12 @@
                 <version>4.2.2</version>
                 <scope>compile</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-assistedinject</artifactId>
+                <version>4.2.2</version>
+            </dependency>
+
             <!-- guava - common utils -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -304,5 +310,7 @@
         <module>modules/eventbus</module>
         <module>modules/game</module>
         <module>modules/text</module>
+        <module>modules/user</module>
+        <module>modules/util</module>
     </modules>
 </project>
