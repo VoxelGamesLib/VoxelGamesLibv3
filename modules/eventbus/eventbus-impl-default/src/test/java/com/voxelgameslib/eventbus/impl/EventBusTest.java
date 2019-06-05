@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.voxelgameslib.eventbus.impl.impl.DefaultEventBus;
-import com.voxelgameslib.eventbus.impl.impl.EventHandler;
-import com.voxelgameslib.eventbus.impl.impl.Subscribe;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventBusTest {

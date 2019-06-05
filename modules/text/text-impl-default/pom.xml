@@ -11,4 +11,11 @@
     </parent>
 
     <artifactId>text-impl-default</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.voxelgameslib</groupId>
+            <artifactId>text-api</artifactId>
+        </dependency>
+    </dependencies>
 </project>

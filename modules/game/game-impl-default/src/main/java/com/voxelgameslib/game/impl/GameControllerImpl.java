@@ -1,24 +1,27 @@
 package com.voxelgameslib.game.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 
-import java.util.ServiceLoader;
-
 import com.voxelgameslib.game.GameController;
 import com.voxelgameslib.game.GameInstance;
+import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.util.Identifier;
 
+@Singleton
 public class GameControllerImpl implements GameController {
 
     @Inject
     private Logger logger;
+    @Inject
+    private GameModuleFactory gameModuleFactory;
 
     @Override
     public GameInstance startGame(GameType gameType) {
-        GameInstance gameInstance = ServiceLoader.load(GameInstance.class).findFirst().orElseThrow();
+        GameInstance gameInstance = gameModuleFactory.gameInstance(gameType);
         gameInstance.setGameType(gameType);
 
         return gameInstance;

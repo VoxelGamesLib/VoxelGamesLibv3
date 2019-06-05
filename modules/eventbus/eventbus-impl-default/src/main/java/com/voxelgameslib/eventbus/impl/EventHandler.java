@@ -1,4 +1,4 @@
-package com.voxelgameslib.eventbus.impl.impl;
+package com.voxelgameslib.eventbus.impl;
 
 import com.google.common.base.Objects;
 

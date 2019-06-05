@@ -1,4 +1,4 @@
-package com.voxelgameslib.eventbus.impl.impl;
+package com.voxelgameslib.eventbus.impl;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
