@@ -39,6 +39,8 @@ public class Test {
         GameController gameController = injector.getInstance(GameController.class);
         GameType gameType = gameController.loadGameType(Identifier.ofVGL("test"));
         gameController.startGame(gameType);
+
+        System.out.println(Text.ofPlain("test"));
     }
 
 }

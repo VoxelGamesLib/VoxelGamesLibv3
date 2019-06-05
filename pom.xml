@@ -339,7 +339,7 @@
         <module>modules/game</module>
         <module>modules/text</module>
         <module>modules/user</module>
-        <module>modules/util</module>
         <module>impls</module>
+        <module>module-util</module>
     </modules>
 </project>

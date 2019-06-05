@@ -29,14 +29,15 @@
         </dependency>
         <dependency>
             <groupId>com.voxelgameslib</groupId>
-            <artifactId>user-impl-default</artifactId>
+            <artifactId>text-impl-test</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.voxelgameslib</groupId>
-            <artifactId>util-impl-default</artifactId>
+            <artifactId>user-impl-default</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>

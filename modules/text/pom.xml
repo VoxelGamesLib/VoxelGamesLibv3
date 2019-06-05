@@ -31,5 +31,6 @@
     <modules>
         <module>text-api</module>
         <module>text-impl-default</module>
+        <module>text-impl-test</module>
     </modules>
 </project>

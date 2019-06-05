@@ -8,9 +8,12 @@ import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.util.Identifier;
+import com.voxelgameslib.util.ImplementsModule;
 import com.voxelgameslib.util.VGLModule;
 
+@ImplementsModule(value = GameModuleFactory.class, prio = ImplementsModule.VGL_PRIO)
 public class GameImplModule implements VGLModule {
+
     @Override
     public void configure(Binder binder) {
         binder.bind(GameController.class).to(GameControllerImpl.class);

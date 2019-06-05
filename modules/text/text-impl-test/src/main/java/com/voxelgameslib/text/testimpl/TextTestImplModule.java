@@ -1,4 +1,4 @@
-package com.voxelgameslib.text.impl;
+package com.voxelgameslib.text.testimpl;
 
 import com.google.inject.Binder;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -9,18 +9,18 @@ import com.voxelgameslib.util.Identifier;
 import com.voxelgameslib.util.ImplementsModule;
 import com.voxelgameslib.util.VGLModule;
 
-@ImplementsModule(value = TextModuleFactory.class, prio = ImplementsModule.VGL_PRIO)
-public class TextImplModule implements VGLModule {
+@ImplementsModule(TextModuleFactory.class)
+public class TextTestImplModule implements VGLModule {
 
     @Override
     public void configure(Binder binder) {
         binder.install(new FactoryModuleBuilder()
-                .implement(Text.class, TextImpl.class)
+                .implement(Text.class, TextTestImpl.class)
                 .build(TextModuleFactory.class));
     }
 
     @Override
     public Identifier identifier() {
-        return Identifier.ofVGL("DefaultTextModule");
+        return Identifier.ofVGL("TestTextModule");
     }
 }

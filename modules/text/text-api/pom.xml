@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.voxelgameslib</groupId>
-            <artifactId>util-api</artifactId>
+            <artifactId>module-util</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

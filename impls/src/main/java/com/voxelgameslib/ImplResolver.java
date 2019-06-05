@@ -1,7 +1,5 @@
 package com.voxelgameslib;
 
-import com.google.inject.Module;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,20 +8,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import com.voxelgameslib.eventbus.EventBusModule;
-import com.voxelgameslib.eventbus.impl.EventBusImplModule;
-import com.voxelgameslib.game.GameModuleFactory;
-import com.voxelgameslib.game.impl.GameImplModule;
-import com.voxelgameslib.text.TextModuleFactory;
-import com.voxelgameslib.text.impl.TextImplModule;
-import com.voxelgameslib.user.UserModuleFactory;
-import com.voxelgameslib.user.impl.UserImplModule;
-import com.voxelgameslib.util.UtilModuleFactory;
-import com.voxelgameslib.util.VGLInjectionPoint;
+import com.voxelgameslib.util.ImplementsModule;
+import com.voxelgameslib.util.ModuleFactory;
 import com.voxelgameslib.util.VGLModule;
-import com.voxelgameslib.util.impl.UtilImplModule;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -35,43 +26,45 @@ public class ImplResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(ImplResolver.class);
 
-    private Map<Class, List<Module>> impls = new HashMap<>();
+    private Map<Class<? extends ModuleFactory>, TreeMap<Integer, Class<? extends VGLModule>>> impls = new HashMap<>();
 
     private ImplResolver() {
     }
 
-    public void registerImpl(Class clazz, Module module) {
-        impls.computeIfAbsent(clazz, (key) -> new ArrayList<>()).add(module);
-    }
-
     public void setup() {
-        registerDefaultImpls();
-        resolveImpls();
+        try (ScanResult scanResult = new ClassGraph().enableClassInfo().scan()) {
+            scanResult.getClassesImplementing(VGLModule.class.getName()).stream()
+                    .map(ClassInfo::loadClass).forEach(moduleClass -> {
+                ImplementsModule moduleInfo = moduleClass.getAnnotation(ImplementsModule.class);
+                if (moduleInfo == null) {
+                    logger.error("Module {} doesn't specify a @ImplementsModule annotation!", moduleClass.getName());
+                } else {
+                    //noinspection unchecked
+                    registerImpl(moduleInfo.value(), (Class<? extends VGLModule>) moduleClass, moduleInfo.prio());
+                }
+            });
+        }
+
+        logger.info("Found {} modules with {} implementations",
+                impls.size(), impls.values().stream().mapToLong(TreeMap::size).sum());
     }
 
-    private void registerDefaultImpls() {
-        registerImpl(EventBusModule.class, new EventBusImplModule());
-        registerImpl(GameModuleFactory.class, new GameImplModule());
-        registerImpl(TextModuleFactory.class, new TextImplModule());
-        registerImpl(UserModuleFactory.class, new UserImplModule());
-        registerImpl(UtilModuleFactory.class, new UtilImplModule());
+    private void registerImpl(Class<? extends ModuleFactory> api, Class<? extends VGLModule> impl, int prio) {
+        impls.computeIfAbsent(api, (key) -> new TreeMap<>()).put(prio, impl);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Registering implementation {} of module {}", impl.getName(), api.getName());
+        }
     }
 
-    private void resolveImpls() {
-        //TODO implement me, resolve modules from file or classpath or whatever
-        // maybe @OverridesModule(GameModuleFactory) and then Modules.override
-        logger.info("Implement module resolving");
-    }
-
-    public Module getImpl(Class clazz) {
-        List<Module> modules = impls.getOrDefault(clazz, new ArrayList<>());
+    public Collection<Class<? extends VGLModule>> getImpls(Class<? extends ModuleFactory> clazz) {
+        Collection<Class<? extends VGLModule>> modules = impls.getOrDefault(clazz, new TreeMap<>()).values();
         if (modules.size() == 0) {
             throw new IllegalStateException("No implementation available for module " + clazz.getName());
         }
-        return modules.get(modules.size() - 1); // get last
+        return modules;
     }
 
-    public Collection<Module> getImpls() {
-        return impls.values().stream().flatMap(List::stream).collect(Collectors.toSet());
+    public Set<Class<? extends ModuleFactory>> getModules() {
+        return impls.keySet();
     }
 }
