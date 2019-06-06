@@ -1,7 +1,5 @@
 package com.voxelgameslib.util;
 
-import com.google.common.base.MoreObjects;
-
 public class Identifier {
 
     private String namespace;

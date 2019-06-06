@@ -337,6 +337,7 @@
         <module>voxelgameslib</module>
         <module>modules/eventbus</module>
         <module>modules/game</module>
+        <module>modules/script</module>
         <module>modules/text</module>
         <module>modules/user</module>
         <module>impls</module>

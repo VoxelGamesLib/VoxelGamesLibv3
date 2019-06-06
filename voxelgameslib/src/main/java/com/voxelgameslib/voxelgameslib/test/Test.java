@@ -1,17 +1,17 @@
 package com.voxelgameslib.voxelgameslib.test;
 
-import com.google.common.base.MoreObjects;
 import com.google.inject.Injector;
 
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.UUID;
 
 import com.voxelgameslib.ImplResolver;
-import com.voxelgameslib.game.Feature;
 import com.voxelgameslib.game.GameController;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.builder.GameTypeBuilder;
+import com.voxelgameslib.script.ScriptController;
 import com.voxelgameslib.text.Text;
 import com.voxelgameslib.user.User;
 import com.voxelgameslib.user.UserModuleFactory;
@@ -48,10 +48,14 @@ public class Test {
 
         GameType type = GameTypeBuilder.of(Identifier.ofVGL("TestGameType"))
                 .withNewPhase(Identifier.ofVGL("TestPhase"))
-                    .withFeature(TestFeature.class)
-                    .withFeature(TestFeature.class, (feature) -> feature.setTest("test"))
-                    .build()
+                .withFeature(TestFeature.class)
+                .withFeature(TestFeature.class, (feature) -> feature.setTest("test"))
+                .build()
                 .build();
         System.out.println(type);
+
+        injector.getInstance(ScriptController.class).executeScript("js", "print('test2')");
+        injector.getInstance(ScriptController.class).executeScript("js",
+                new File("D:\\IntellijProjects\\VoxelGamesLibv3\\voxelgameslib\\src\\main\\java\\com\\voxelgameslib\\voxelgameslib\\test\\test.js"));
     }
 }
