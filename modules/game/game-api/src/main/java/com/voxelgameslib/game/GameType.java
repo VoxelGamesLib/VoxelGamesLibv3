@@ -1,14 +1,17 @@
 package com.voxelgameslib.game;
 
-import java.util.Set;
+import java.util.List;
 
 import com.voxelgameslib.text.Text;
+import com.voxelgameslib.util.Identifier;
 
 public interface GameType {
 
-    String getName();
+    Identifier getIdentifier();
 
     Text getDisplayName();
 
-    Set<Phase> getPhases();
+    void setDisplayName(Text displayName);
+
+    List<Phase> getPhases();
 }

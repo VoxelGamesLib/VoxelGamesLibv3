@@ -1,14 +1,15 @@
 package com.voxelgameslib.game;
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.voxelgameslib.user.User;
 
 public interface GameInstance {
 
-    GameType getGameType();
+    UUID getId();
 
-    void setGameType(GameType gameType);
+    GameType getGameType();
 
     Set<User> getPlayers();
 
