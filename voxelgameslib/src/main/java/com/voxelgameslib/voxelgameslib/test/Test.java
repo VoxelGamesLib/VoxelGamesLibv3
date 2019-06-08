@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.UUID;
 
 import com.voxelgameslib.ImplResolver;
@@ -55,7 +54,13 @@ public class Test {
         System.out.println(type);
 
         injector.getInstance(ScriptController.class).executeScript("js", "print('test2')");
-        injector.getInstance(ScriptController.class).executeScript("js",
-                new File("D:\\IntellijProjects\\VoxelGamesLibv3\\voxelgameslib\\src\\main\\java\\com\\voxelgameslib\\voxelgameslib\\test\\test.js"));
+        GameType gameType2 = injector.getInstance(ScriptController.class).executeScript("js", Test.class.getResource("/test.js"));
+        System.out.println(gameType2);
+
+//        GameType gameType3 = injector.getInstance(ScriptController.class).executeScript("ruby", Test.class.getResource("/test.rb"));
+//        System.out.println(gameType3);
+//
+//        GameType gameType4 = injector.getInstance(ScriptController.class).executeScript("python", Test.class.getResource("/test.py"));
+//        System.out.println(gameType4);
     }
 }

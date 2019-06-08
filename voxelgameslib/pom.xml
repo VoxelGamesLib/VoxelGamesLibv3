@@ -12,6 +12,10 @@
 
     <artifactId>voxelgameslib</artifactId>
 
+    <properties>
+        <exec.executable>java</exec.executable>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.voxelgameslib</groupId>
@@ -51,6 +55,31 @@
         <plugins>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>--module-path</argument>
+                                <modulepath/>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>-XX:+UnlockExperimentalVMOptions</argument>
+                                <argument>-XX:+EnableJVMCI</argument>
+                                <argument>--upgrade-module-path=D:\IntellijProjects\VoxelGamesLibv3\modules\script\script-impl-default\target\compiler\compiler.jar</argument>
+                                <argument>com.voxelgameslib.voxelgameslib.test.Test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
