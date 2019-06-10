@@ -1,5 +1,6 @@
 package com.voxelgameslib.voxelgameslib.test;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import org.slf4j.LoggerFactory;
@@ -30,18 +31,31 @@ public class Test {
         ImplResolver.INSTANCE.setup();
 
         Injector injector = VoxelGamesLibModule.createInjector();
+        Test test = new Test();
+        injector.injectMembers(test);
+        test.test();
+    }
 
+    @Inject
+    private UserModuleFactory userModuleFactory;
+    @Inject
+    private GameController gameController;
+    @Inject
+    private ScriptController scriptController;
+
+    private void test() {
         Identifier t = Identifier.ofVGL("test");
         System.out.println(t);
 
-        UserModuleFactory userModuleFactory = injector.getInstance(UserModuleFactory.class);
         User user = userModuleFactory.user(UUID.randomUUID(), "username");
 
         System.out.println(user);
 
-        GameController gameController = injector.getInstance(GameController.class);
-        GameType gameType = gameController.loadGameType(Identifier.ofVGL("test"));
-        gameController.startGame(gameType);
+        GameType gameType = gameController.loadGameType(Identifier.ofVGL("TestGameType"));
+        if (gameType != null) {
+            System.out.println("loaded gametype " + gameType + " from script!");
+            gameController.startGame(gameType);
+        }
 
         System.out.println(Text.ofPlain("test"));
 
@@ -53,14 +67,14 @@ public class Test {
                 .build();
         System.out.println(type);
 
-        injector.getInstance(ScriptController.class).executeScript("js", "print('test2')");
-        GameType gameType2 = injector.getInstance(ScriptController.class).executeScript("js", Test.class.getResource("/test.js"));
+        scriptController.executeScript("js", "print('test2')");
+        GameType gameType2 = scriptController.executeScript("js", Test.class.getResource("/test.js"));
         System.out.println(gameType2);
 
-//        GameType gameType3 = injector.getInstance(ScriptController.class).executeScript("ruby", Test.class.getResource("/test.rb"));
+//        GameType gameType3 = scriptControllerexecuteScript("ruby", Test.class.getResource("/test.rb"));
 //        System.out.println(gameType3);
 //
-//        GameType gameType4 = injector.getInstance(ScriptController.class).executeScript("python", Test.class.getResource("/test.py"));
+//        GameType gameType4 = scriptController.executeScript("python", Test.class.getResource("/test.py"));
 //        System.out.println(gameType4);
     }
 }

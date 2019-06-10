@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import com.voxelgameslib.game.GameController;
@@ -12,6 +14,7 @@ import com.voxelgameslib.game.GameInjectionPoint;
 import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
+import com.voxelgameslib.game.GameTypeResolver;
 import com.voxelgameslib.util.Identifier;
 
 @Singleton
@@ -21,6 +24,8 @@ public class GameControllerImpl implements GameController {
     private Logger logger;
     @Inject
     private GameModuleFactory gameModuleFactory;
+    @Inject
+    private Set<GameTypeResolver> gameTypeResolvers;
 
     @Override
     public GameInstance startGame(GameType gameType) {
@@ -41,9 +46,9 @@ public class GameControllerImpl implements GameController {
 
     @Override
     public GameType loadGameType(Identifier identifier) {
-        GameType gameType = GameInjectionPoint.gameModuleFactory.gameType(identifier);
-        logger.warn("load game type " + identifier);
-        //TODO actually load the game type
-        return gameType;
+        return gameTypeResolvers.stream()
+                .map(gameTypeResolver -> gameTypeResolver.resolve(identifier)).
+                filter(Objects::nonNull)
+                .findFirst().orElse(null);
     }
 }

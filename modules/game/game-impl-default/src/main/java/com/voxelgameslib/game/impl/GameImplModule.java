@@ -2,11 +2,16 @@ package com.voxelgameslib.game.impl;
 
 import com.google.inject.Binder;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
+
+import java.io.File;
 
 import com.voxelgameslib.game.GameController;
 import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
+import com.voxelgameslib.game.GameTypeResolver;
 import com.voxelgameslib.game.Phase;
 import com.voxelgameslib.game.builder.GameTypeBuilder;
 import com.voxelgameslib.game.builder.PhaseBuilder;
@@ -30,6 +35,13 @@ public class GameImplModule implements VGLModule {
                 .implement(GameType.class, GameTypeImpl.class)
                 .implement(Phase.class, PhaseImpl.class)
                 .build(GameModuleFactory.class));
+
+        File dataFolder = new File(".");
+        binder.bind(File.class).annotatedWith(Names.named("gameTypeScriptFolder")).toInstance(new File(dataFolder, "gametypes"));
+
+        Multibinder<GameTypeResolver> gameTypeResolverBinder = Multibinder.newSetBinder(binder, GameTypeResolver.class);
+        gameTypeResolverBinder.addBinding().to(ScriptGameTypeResolver.class);
+        gameTypeResolverBinder.addBinding().to(CodeGameTypeResolver.class);
     }
 
     @Override

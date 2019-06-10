@@ -1,5 +1,7 @@
 package com.voxelgameslib.game;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import com.voxelgameslib.util.Identifier;
 
 public interface GameController {
@@ -10,5 +12,6 @@ public interface GameController {
 
     void stopGame(GameInstance gameInstance);
 
+    @Nullable
     GameType loadGameType(Identifier test);
 }
