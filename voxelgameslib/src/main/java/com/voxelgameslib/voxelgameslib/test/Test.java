@@ -9,8 +9,10 @@ import java.util.UUID;
 
 import com.voxelgameslib.ImplResolver;
 import com.voxelgameslib.game.GameController;
+import com.voxelgameslib.game.GameResolvers;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.builder.GameTypeBuilder;
+import com.voxelgameslib.game.builder.PhaseBuilder;
 import com.voxelgameslib.script.ScriptController;
 import com.voxelgameslib.text.Text;
 import com.voxelgameslib.user.User;
@@ -42,6 +44,8 @@ public class Test {
     private GameController gameController;
     @Inject
     private ScriptController scriptController;
+    @Inject
+    private GameResolvers gameResolvers;
 
     private void test() {
         Identifier t = Identifier.ofVGL("test");
@@ -51,7 +55,7 @@ public class Test {
 
         System.out.println(user);
 
-        GameType gameType = gameController.loadGameType(Identifier.ofVGL("TestGameType"));
+        GameType gameType = gameResolvers.loadGameType(Identifier.ofVGL("TestGameType"));
         if (gameType != null) {
             System.out.println("loaded gametype " + gameType + " from script!");
             gameController.startGame(gameType);
@@ -60,21 +64,15 @@ public class Test {
         System.out.println(Text.ofPlain("test"));
 
         GameType type = GameTypeBuilder.of(Identifier.ofVGL("TestGameType"))
-                .withNewPhase(Identifier.ofVGL("TestPhase"))
-                .withFeature(TestFeature.class)
-                .withFeature(TestFeature.class, (feature) -> feature.setTest("test"))
-                .build()
+                .withPhase(
+                        PhaseBuilder.of(Identifier.ofVGL("TestPhase"))
+                                .withFeature(Identifier.ofVGL("TestFeature"))
+                                //.<TestFeature>withFeature(Identifier.ofVGL("TestFeature"), (feature) -> feature.setTest("test"))
+                                .build()
+                )
                 .build();
         System.out.println(type);
 
         scriptController.executeScript("js", "print('test2')");
-        GameType gameType2 = scriptController.executeScript("js", Test.class.getResource("/test.js"));
-        System.out.println(gameType2);
-
-//        GameType gameType3 = scriptControllerexecuteScript("ruby", Test.class.getResource("/test.rb"));
-//        System.out.println(gameType3);
-//
-//        GameType gameType4 = scriptController.executeScript("python", Test.class.getResource("/test.py"));
-//        System.out.println(gameType4);
     }
 }

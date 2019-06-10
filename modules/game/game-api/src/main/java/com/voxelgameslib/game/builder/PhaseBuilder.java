@@ -3,12 +3,19 @@ package com.voxelgameslib.game.builder;
 import java.util.function.Consumer;
 
 import com.voxelgameslib.game.Feature;
+import com.voxelgameslib.game.GameInjectionPoint;
+import com.voxelgameslib.game.Phase;
+import com.voxelgameslib.util.Identifier;
 
 public interface PhaseBuilder {
 
-    GameTypeBuilder build();
+    Phase build();
 
-    <T extends Feature> PhaseBuilder withFeature(Class<T> featureClass);
+    <T extends Feature> PhaseBuilder withFeature(Identifier identifier);
 
-    <T extends Feature> PhaseBuilder withFeature(Class<T> featureClass, Consumer<T> featureConfigurator);
+    <T extends Feature> PhaseBuilder withFeature(Identifier identifier, Consumer<T> featureConfigurator);
+
+    static PhaseBuilder of(Identifier identifier) {
+        return GameInjectionPoint.gameModuleFactory.phaseBuilder(identifier);
+    }
 }

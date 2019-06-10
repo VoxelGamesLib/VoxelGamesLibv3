@@ -9,9 +9,7 @@ public interface GameTypeBuilder {
 
     GameType build();
 
-    PhaseBuilder withNewPhase(Identifier identifier);
-
-    PhaseBuilder withPhase(Class<Phase> phase);
+    GameTypeBuilder withPhase(Identifier identifier);
 
     GameTypeBuilder withPhase(Phase phase);
 

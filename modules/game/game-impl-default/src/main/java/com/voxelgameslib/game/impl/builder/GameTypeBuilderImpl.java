@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
 
 import com.voxelgameslib.game.GameModuleFactory;
+import com.voxelgameslib.game.GameResolvers;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.Phase;
 import com.voxelgameslib.game.builder.GameTypeBuilder;
@@ -15,23 +16,13 @@ import com.voxelgameslib.util.Identifier;
 public class GameTypeBuilderImpl implements GameTypeBuilder {
 
     private GameType gameType;
-    private Identifier identifier;
+
+    private GameResolvers gameResolvers;
 
     @Inject
-    private GameModuleFactory gameModuleFactory;
-    @Inject
-    private GuiceFactory guiceFactory;
-
-    @Inject
-    GameTypeBuilderImpl(@Assisted("identifier") Identifier identifier) {
-        this.identifier = identifier;
-    }
-
-    private GameType getGameType() {
-        if(gameType == null) {
-            gameType = gameModuleFactory.gameType(identifier);
-        }
-        return gameType;
+    GameTypeBuilderImpl(@Assisted("identifier") Identifier identifier, GameModuleFactory gameModuleFactory, GameResolvers gameResolvers) {
+        this.gameType = gameModuleFactory.gameType(identifier);
+        this.gameResolvers = gameResolvers;
     }
 
     @Override
@@ -40,19 +31,17 @@ public class GameTypeBuilderImpl implements GameTypeBuilder {
     }
 
     @Override
-    public PhaseBuilder withNewPhase(Identifier identifier) {
-        Phase phase = gameModuleFactory.phase(identifier);
-        return gameModuleFactory.phaseBuilder(this, phase);
-    }
-
-    @Override
-    public PhaseBuilder withPhase(Class<Phase> phaseClazz) {
-        return gameModuleFactory.phaseBuilder(this, guiceFactory.getInstance(phaseClazz));
+    public GameTypeBuilder withPhase(Identifier identifier) {
+        Phase phase = gameResolvers.loadPhase(identifier);
+        if(phase == null) {
+            throw new IllegalArgumentException("Unknown phase " + identifier);
+        }
+        return withPhase(phase);
     }
 
     @Override
     public GameTypeBuilder withPhase(Phase phase) {
-        getGameType().getPhases().add(phase);
+        gameType.getPhases().add(phase);
         return this;
     }
 }

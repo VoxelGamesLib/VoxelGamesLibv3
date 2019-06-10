@@ -31,5 +31,6 @@
     <modules>
         <module>game-api</module>
         <module>game-impl-default</module>
+        <module>game-script-resolver</module>
     </modules>
 </project>

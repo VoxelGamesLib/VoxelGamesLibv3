@@ -19,11 +19,14 @@ public interface GameModuleFactory extends ModuleFactory {
     GameTypeBuilder gameTypeBuilder(@Assisted("identifier") Identifier identifier);
 
     @Inject
-    PhaseBuilder phaseBuilder(@Assisted("gameTypeBuilder") GameTypeBuilder gameTypeBuilder, @Assisted("phase") Phase phase);
+    PhaseBuilder phaseBuilder(@Assisted("identifier") Identifier identifier);
 
     @Inject
     GameType gameType(@Assisted("identifier") Identifier identifier);
 
     @Inject
     Phase phase(@Assisted("identifier") Identifier identifier);
+
+//    @Inject
+//    Feature feature(@Assisted("identifier") Identifier identifier);
 }

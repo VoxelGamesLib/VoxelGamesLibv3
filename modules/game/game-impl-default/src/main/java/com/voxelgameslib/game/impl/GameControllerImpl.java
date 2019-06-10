@@ -9,12 +9,14 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.voxelgameslib.game.Feature;
 import com.voxelgameslib.game.GameController;
 import com.voxelgameslib.game.GameInjectionPoint;
 import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.GameTypeResolver;
+import com.voxelgameslib.game.Phase;
 import com.voxelgameslib.util.Identifier;
 
 @Singleton
@@ -24,8 +26,6 @@ public class GameControllerImpl implements GameController {
     private Logger logger;
     @Inject
     private GameModuleFactory gameModuleFactory;
-    @Inject
-    private Set<GameTypeResolver> gameTypeResolvers;
 
     @Override
     public GameInstance startGame(GameType gameType) {
@@ -42,13 +42,5 @@ public class GameControllerImpl implements GameController {
     @Override
     public void stopGame(GameInstance gameInstance) {
 
-    }
-
-    @Override
-    public GameType loadGameType(Identifier identifier) {
-        return gameTypeResolvers.stream()
-                .map(gameTypeResolver -> gameTypeResolver.resolve(identifier)).
-                filter(Objects::nonNull)
-                .findFirst().orElse(null);
     }
 }

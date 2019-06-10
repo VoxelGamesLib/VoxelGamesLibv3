@@ -10,6 +10,7 @@ import java.io.File;
 import com.voxelgameslib.game.GameController;
 import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameModuleFactory;
+import com.voxelgameslib.game.GameResolvers;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.GameTypeResolver;
 import com.voxelgameslib.game.Phase;
@@ -27,6 +28,7 @@ public class GameImplModule implements VGLModule {
     @Override
     public void configure(Binder binder) {
         binder.bind(GameController.class).to(GameControllerImpl.class);
+        binder.bind(GameResolvers.class).to(GameResolversImpl.class);
 
         binder.install(new FactoryModuleBuilder()
                 .implement(GameInstance.class, GameInstanceImpl.class)
@@ -36,11 +38,8 @@ public class GameImplModule implements VGLModule {
                 .implement(Phase.class, PhaseImpl.class)
                 .build(GameModuleFactory.class));
 
-        File dataFolder = new File(".");
-        binder.bind(File.class).annotatedWith(Names.named("gameTypeScriptFolder")).toInstance(new File(dataFolder, "gametypes"));
-
+        // classgraph for scanning for multi bindings?
         Multibinder<GameTypeResolver> gameTypeResolverBinder = Multibinder.newSetBinder(binder, GameTypeResolver.class);
-        gameTypeResolverBinder.addBinding().to(ScriptGameTypeResolver.class);
         gameTypeResolverBinder.addBinding().to(CodeGameTypeResolver.class);
     }
 
