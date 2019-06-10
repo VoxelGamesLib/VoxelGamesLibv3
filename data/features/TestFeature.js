@@ -1,4 +1,11 @@
-const FeatureImpl = Java.type('com.voxelgameslib.game.impl.FeatureImpl');
+const ScriptFeature = Java.type('com.voxelgameslib.game.scriptresolver.ScriptFeature');
 const Identifier = Java.type('com.voxelgameslib.util.Identifier');
 
-new FeatureImpl(Identifier.ofVGL("TestFeature"));
+
+const testfeature = new ScriptFeature(Identifier.ofVGL("TestFeature"));
+testfeature.init(() => {
+    testfeature.getGameInstance().getEventBus();
+    print("init!");
+});
+
+testfeature; // return

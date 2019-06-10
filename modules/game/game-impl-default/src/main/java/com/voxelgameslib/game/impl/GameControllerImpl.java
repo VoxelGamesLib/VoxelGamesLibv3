@@ -30,8 +30,14 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameInstance startGame(GameType gameType) {
         GameInstance gameInstance = gameModuleFactory.gameInstance(gameType, UUID.randomUUID());
-
+        startPhase(gameInstance, gameType.getPhases().get(0));
         return gameInstance;
+    }
+
+    @Override
+    public void startPhase(GameInstance gameInstance, Phase phase) {
+        gameInstance.setActivePhase(phase);
+        phase.getFeatures().forEach(f -> f.load(gameInstance));
     }
 
     @Override

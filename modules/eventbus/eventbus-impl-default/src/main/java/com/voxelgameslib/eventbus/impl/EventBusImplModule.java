@@ -1,6 +1,7 @@
 package com.voxelgameslib.eventbus.impl;
 
 import com.google.inject.Binder;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 import com.voxelgameslib.eventbus.EventBus;
 import com.voxelgameslib.eventbus.EventBusModuleFactory;
@@ -13,7 +14,9 @@ public class EventBusImplModule implements VGLModule {
 
     @Override
     public void configure(Binder binder) {
-        binder.bind(EventBus.class).toInstance(new DefaultEventBus());
+        binder.install(new FactoryModuleBuilder()
+                .implement(EventBus.class, DefaultEventBus.class)
+                .build(EventBusModuleFactory.class));
     }
 
     @Override

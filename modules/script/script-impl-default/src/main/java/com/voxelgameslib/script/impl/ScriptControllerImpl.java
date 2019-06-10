@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.voxelgameslib.script.ScriptContextHolder;
 import com.voxelgameslib.script.ScriptController;
 import com.voxelgameslib.util.Identifier;
 
@@ -52,15 +53,26 @@ public class ScriptControllerImpl implements ScriptController {
     }
 
     private <T> T eval(Source source) {
-        try (Context context = Context.newBuilder().engine(engine).allowAllAccess(true).build()) {
+        Context context = null;
+        T val = null;
+        try {
+            context = Context.newBuilder().engine(engine).allowAllAccess(true).build();
             Value value = context.eval(source);
             if(value.isHostObject()) {
-                return value.asHostObject();
+                val = value.asHostObject();
+                return val;
             }else if(value.isNull()) {
                 return null;
             }else {
                 System.out.println("Unknown value! " + value);
                 return null;
+            }
+        }finally {
+            if(val != null && val instanceof GraalScriptContextHolder) {
+                GraalScriptContextHolder scriptContextHolder = (GraalScriptContextHolder) val;
+                scriptContextHolder.setContext(context);
+            }else {
+                context.close();
             }
         }
     }

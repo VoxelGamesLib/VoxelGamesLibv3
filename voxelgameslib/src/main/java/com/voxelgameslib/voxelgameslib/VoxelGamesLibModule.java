@@ -42,7 +42,12 @@ public class VoxelGamesLibModule implements Module {
     private void staticInjection(Binder binder) {
         try (ScanResult scanResult = new ClassGraph().enableClassInfo().scan()) {
             scanResult.getClassesImplementing(VGLInjectionPoint.class.getName()).stream()
-                    .map(ClassInfo::loadClass).forEach(binder::requestStaticInjection);
+                    .map(ClassInfo::loadClass).forEach(types -> {
+                binder.requestStaticInjection(types);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Statically inject {}", types);
+                }
+            });
         }
     }
 

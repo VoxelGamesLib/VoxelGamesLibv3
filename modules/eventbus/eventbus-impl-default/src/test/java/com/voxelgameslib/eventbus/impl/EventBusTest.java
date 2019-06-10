@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.voxelgameslib.util.Identifier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventBusTest {
@@ -39,7 +41,7 @@ class EventBusTest {
 
     @BeforeEach
     void setup() {
-        eventBus = new DefaultEventBus();
+        eventBus = new DefaultEventBus(null);
     }
 
     @Test

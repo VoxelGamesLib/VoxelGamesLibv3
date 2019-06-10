@@ -3,6 +3,7 @@ package com.voxelgameslib.game;
 import java.util.Set;
 import java.util.UUID;
 
+import com.voxelgameslib.eventbus.EventBus;
 import com.voxelgameslib.user.User;
 
 public interface GameInstance {
@@ -14,5 +15,9 @@ public interface GameInstance {
     Set<User> getPlayers();
 
     Phase getActivePhase();
+
+    void setActivePhase(Phase phase);
+
+    EventBus getEventBus();
 
 }

@@ -3,6 +3,8 @@ package com.voxelgameslib.eventbus.impl;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
 import com.voxelgameslib.eventbus.EventBus;
+import com.voxelgameslib.util.Identifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,6 +48,13 @@ public final class DefaultEventBus implements EventBus {
     private final SubscriberFindingStrategy finder = new AnnotatedSubscriberFinder();
 
     private HierarchyCache flattenHierarchyCache = new HierarchyCache();
+
+    private Identifier identifier;
+
+    @Inject
+    DefaultEventBus(@Assisted("identifier") Identifier identifier) {
+        this.identifier = identifier;
+    }
 
     /**
      * Registers the given handler for the given class with the default priority to receive events
@@ -196,6 +206,11 @@ public final class DefaultEventBus implements EventBus {
         for (EventHandler handler : dispatching) {
             dispatch(event, handler);
         }
+    }
+
+    @Override
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
     /**

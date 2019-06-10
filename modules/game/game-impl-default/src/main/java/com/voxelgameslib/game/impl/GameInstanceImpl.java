@@ -11,22 +11,27 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.voxelgameslib.eventbus.EventBus;
 import com.voxelgameslib.game.GameInstance;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.Phase;
 import com.voxelgameslib.user.User;
+import com.voxelgameslib.util.Identifier;
 
 public class GameInstanceImpl implements GameInstance {
 
     private GameType gameType;
     private Set<User> players = new HashSet<>();
     private UUID id;
+    private EventBus eventBus;
     @MonotonicNonNull
     private Phase activePhase;
 
     @Inject
     GameInstanceImpl(@Assisted("gameType") GameType gameType, @Assisted("uuid") UUID id) {
         this.gameType = gameType;
+        this.id = id;
+        this.eventBus = EventBus.newEventBus(Identifier.of("game", gameType.toString() + "-" + id.toString()));
     }
 
     @Override
@@ -47,6 +52,16 @@ public class GameInstanceImpl implements GameInstance {
     @Override
     public Phase getActivePhase() {
         return activePhase;
+    }
+
+    @Override
+    public void setActivePhase(Phase activePhase) {
+        this.activePhase = activePhase;
+    }
+
+    @Override
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     @Override
