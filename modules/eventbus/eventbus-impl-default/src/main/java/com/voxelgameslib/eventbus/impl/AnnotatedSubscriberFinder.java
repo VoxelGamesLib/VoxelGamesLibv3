@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 
 import java.lang.reflect.Method;
 
+import com.voxelgameslib.eventbus.EventHandler;
+
 /**
  * A {@link SubscriberFindingStrategy} for collecting all event handler methods that are marked with the {@link
  * Subscribe} annotation.
@@ -19,8 +21,8 @@ class AnnotatedSubscriberFinder implements SubscriberFindingStrategy {
      * This implementation finds all methods marked with a {@link Subscribe} annotation.
      */
     @Override
-    public Multimap<Class<?>, EventHandler> findAllSubscribers(Object listener) {
-        Multimap<Class<?>, EventHandler> methodsInListener = HashMultimap.create();
+    public Multimap<Class<?>, EventHandler<?>> findAllSubscribers(Object listener) {
+        Multimap<Class<?>, EventHandler<?>> methodsInListener = HashMultimap.create();
         Class<?> clazz = listener.getClass();
         while (clazz != null) {
             for (Method method : clazz.getMethods()) {
@@ -36,7 +38,7 @@ class AnnotatedSubscriberFinder implements SubscriberFindingStrategy {
                                         "must require a single argument.");
                     }
                     Class<?> eventType = parameterTypes[0];
-                    EventHandler handler = new MethodEventHandler(annotation.priority(), listener, method);
+                    DefaultEventHandler handler = new MethodEventHandler(annotation.priority(), listener, method);
                     methodsInListener.put(eventType, handler);
                 }
             }

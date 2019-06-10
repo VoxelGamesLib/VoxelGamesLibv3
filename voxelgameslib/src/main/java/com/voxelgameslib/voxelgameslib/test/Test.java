@@ -43,16 +43,10 @@ public class Test {
     @Inject
     private GameController gameController;
     @Inject
-    private ScriptController scriptController;
-    @Inject
     private GameResolvers gameResolvers;
 
     private void test() {
-        Identifier t = Identifier.ofVGL("test");
-        System.out.println(t);
-
         User user = userModuleFactory.user(UUID.randomUUID(), "username");
-
         System.out.println(user);
 
         GameType gameType = gameResolvers.loadGameType(Identifier.ofVGL("TestGameType"));
@@ -60,8 +54,6 @@ public class Test {
             System.out.println("loaded gametype " + gameType + " from script!");
             gameController.startGame(gameType);
         }
-
-        System.out.println(Text.ofPlain("test"));
 
         GameType type = GameTypeBuilder.of(Identifier.ofVGL("TestGameType"))
                 .withPhase(
@@ -72,7 +64,5 @@ public class Test {
                 )
                 .build();
         System.out.println(type);
-
-        scriptController.executeScript("js", "print('test2')");
     }
 }

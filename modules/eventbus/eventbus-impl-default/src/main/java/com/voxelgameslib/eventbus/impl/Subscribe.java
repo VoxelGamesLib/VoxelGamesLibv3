@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.voxelgameslib.eventbus.Priority;
+
 /**
  * Used to mark methods as event handlers.
  */
@@ -17,6 +19,6 @@ public @interface Subscribe {
      *
      * @return the priority
      */
-    EventHandler.Priority priority() default EventHandler.Priority.NORMAL;
+    Priority priority() default Priority.NORMAL;
 
 }

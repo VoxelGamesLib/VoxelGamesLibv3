@@ -21,6 +21,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
 import com.voxelgameslib.eventbus.EventBus;
+import com.voxelgameslib.eventbus.EventHandler;
+import com.voxelgameslib.eventbus.Priority;
 import com.voxelgameslib.util.Identifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,7 +40,7 @@ public final class DefaultEventBus implements EventBus {
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private final SetMultimap<Class<?>, EventHandler> handlersByType =
+    private final SetMultimap<Class<?>, EventHandler<?>> handlersByType =
             HashMultimap.create();
 
     /**
@@ -64,8 +66,9 @@ public final class DefaultEventBus implements EventBus {
      * @param handler the handler to register
      * @return the registered handler
      */
+    @Override
     public <T> EventHandler<T> subscribe(Class<T> clazz, Consumer<T> handler) {
-        return subscribe(clazz, handler, EventHandler.Priority.NORMAL);
+        return subscribe(clazz, handler, Priority.NORMAL);
     }
 
     /**
@@ -77,8 +80,9 @@ public final class DefaultEventBus implements EventBus {
      * @param priority the priority to use
      * @return the registered handler
      */
-    public <T> EventHandler<T> subscribe(Class<T> clazz, Consumer<T> handler, EventHandler.Priority priority) {
-        EventHandler<T> eventHandler = new EventHandler<>(priority) {
+    @Override
+    public <T> EventHandler<T> subscribe(Class<T> clazz, Consumer<T> handler, Priority priority) {
+        EventHandler<T> eventHandler = new DefaultEventHandler<>(priority) {
             @Override
             public void dispatch(T event) {
                 handler.accept(event);
@@ -94,7 +98,7 @@ public final class DefaultEventBus implements EventBus {
      * @param clazz   the event class to register
      * @param handler the handler to register
      */
-    public void subscribe(Class<?> clazz, EventHandler handler) {
+    public <T> void subscribe(Class<T> clazz, EventHandler<T> handler) {
         checkNotNull(clazz);
         checkNotNull(handler);
         lock.writeLock().lock();
@@ -110,7 +114,7 @@ public final class DefaultEventBus implements EventBus {
      *
      * @param handlers a map of handlers
      */
-    public void subscribeAll(Multimap<Class<?>, EventHandler> handlers) {
+    public void subscribeAll(Multimap<Class<?>, EventHandler<?>> handlers) {
         checkNotNull(handlers);
         lock.writeLock().lock();
         try {
@@ -126,7 +130,7 @@ public final class DefaultEventBus implements EventBus {
      * @param clazz   the class
      * @param handler the handler
      */
-    public void unsubscribe(Class<?> clazz, EventHandler handler) {
+    public void unsubscribe(Class<?> clazz, EventHandler<?> handler) {
         checkNotNull(clazz);
         checkNotNull(handler);
         lock.writeLock().lock();
@@ -142,11 +146,11 @@ public final class DefaultEventBus implements EventBus {
      *
      * @param handlers a map of handlers
      */
-    public void unsubscribeAll(Multimap<Class<?>, EventHandler> handlers) {
+    public void unsubscribeAll(Multimap<Class<?>, EventHandler<?>> handlers) {
         checkNotNull(handlers);
         lock.writeLock().lock();
         try {
-            for (Map.Entry<Class<?>, Collection<EventHandler>> entry : handlers.asMap().entrySet()) {
+            for (Map.Entry<Class<?>, Collection<EventHandler<?>>> entry : handlers.asMap().entrySet()) {
                 handlersByType.get(entry.getKey()).removeAll(entry.getValue());
             }
         } finally {
@@ -184,14 +188,14 @@ public final class DefaultEventBus implements EventBus {
      * @param event event to post.
      */
     @Override
-    public void post(Object event) {
-        List<EventHandler> dispatching = new ArrayList<>();
+    public <T> void post(T event) {
+        List<EventHandler<?>> dispatching = new ArrayList<>();
 
         Set<Class<?>> dispatchTypes = flattenHierarchyCache.get(event.getClass());
         lock.readLock().lock();
         try {
             for (Class<?> eventType : dispatchTypes) {
-                Set<EventHandler> wrappers = handlersByType.get(eventType);
+                Set<EventHandler<?>> wrappers = handlersByType.get(eventType);
 
                 if (wrappers != null && !wrappers.isEmpty()) {
                     dispatching.addAll(wrappers);
@@ -203,8 +207,9 @@ public final class DefaultEventBus implements EventBus {
 
         Collections.sort(dispatching);
 
-        for (EventHandler handler : dispatching) {
-            dispatch(event, handler);
+        for (EventHandler<?> handler : dispatching) {
+            //noinspection unchecked
+            dispatch(event,(EventHandler<T>) handler);
         }
     }
 
@@ -219,7 +224,7 @@ public final class DefaultEventBus implements EventBus {
      * @param event   event to dispatch.
      * @param handler handler that will call the handler.
      */
-    private void dispatch(Object event, EventHandler handler) {
+    private <T> void dispatch(T event, EventHandler<T> handler) {
         try {
             handler.handleEvent(event);
         } catch (InvocationTargetException e) {

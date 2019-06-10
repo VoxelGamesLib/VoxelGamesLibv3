@@ -17,6 +17,7 @@ import com.voxelgameslib.game.GameModuleFactory;
 import com.voxelgameslib.game.GameType;
 import com.voxelgameslib.game.GameTypeResolver;
 import com.voxelgameslib.game.Phase;
+import com.voxelgameslib.game.events.FeatureStartEvent;
 import com.voxelgameslib.util.Identifier;
 
 @Singleton
@@ -30,14 +31,25 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameInstance startGame(GameType gameType) {
         GameInstance gameInstance = gameModuleFactory.gameInstance(gameType, UUID.randomUUID());
+        logger.debug("Starting a new instance of {} with UUID {}", gameInstance.getGameType(), gameInstance.getId());
         startPhase(gameInstance, gameType.getPhases().get(0));
         return gameInstance;
     }
 
     @Override
     public void startPhase(GameInstance gameInstance, Phase phase) {
+        logger.debug("Starting phase {} for game {}", phase, gameInstance);
         gameInstance.setActivePhase(phase);
-        phase.getFeatures().forEach(f -> f.load(gameInstance));
+        // loading
+        phase.getFeatures().forEach(f -> {
+            logger.debug("Loading feature {} for game {}", f, gameInstance);
+            f.load(gameInstance);
+        });
+        // starting
+        phase.getFeatures().forEach(f -> {
+            logger.debug("Staring feature {} for game {}", f, gameInstance);
+            gameInstance.getEventBus().post(new FeatureStartEvent(f));
+        });
     }
 
     @Override

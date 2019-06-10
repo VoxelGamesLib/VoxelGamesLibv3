@@ -6,20 +6,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.voxelgameslib.eventbus.EventHandler;
+import com.voxelgameslib.eventbus.Priority;
+
 /**
  * Event handler object for {@link DefaultEventBus} that is able to dispatch an event.
  *
  * <p>Original for Guava, licensed under the Apache License, Version 2.0.</p>
  */
-public abstract class EventHandler<T> implements Comparable<EventHandler> {
-
-    public enum Priority {
-        VERY_EARLY,
-        EARLY,
-        NORMAL,
-        LATE,
-        VERY_LATE
-    }
+public abstract class DefaultEventHandler<T> implements EventHandler<T> {
 
     private final Priority priority;
 
@@ -28,7 +23,7 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
      *
      * @param priority the priority
      */
-    protected EventHandler(Priority priority) {
+    protected DefaultEventHandler(Priority priority) {
         checkNotNull(priority);
         this.priority = priority;
     }
@@ -38,6 +33,7 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
      *
      * @return the priority
      */
+    @Override
     public Priority getPriority() {
         return priority;
     }
@@ -50,6 +46,7 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
      * @param event the event
      * @throws InvocationTargetException thrown if an exception is thrown during dispatch
      */
+    @Override
     public final void handleEvent(T event) throws InvocationTargetException {
         try {
             dispatch(event);
@@ -57,14 +54,6 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
             throw new InvocationTargetException(t);
         }
     }
-
-    /**
-     * Dispatch the event.
-     *
-     * @param event the event object
-     * @throws Exception an exception that may be thrown
-     */
-    public abstract void dispatch(T event) throws Exception;
 
     @Override
     public int compareTo(EventHandler o) {
@@ -74,8 +63,8 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EventHandler)) return false;
-        EventHandler that = (EventHandler) o;
+        if (!(o instanceof DefaultEventHandler)) return false;
+        DefaultEventHandler that = (DefaultEventHandler) o;
         return priority == that.priority;
     }
 
@@ -86,7 +75,7 @@ public abstract class EventHandler<T> implements Comparable<EventHandler> {
 
     @Override
     public String toString() {
-        return "EventHandler{" +
+        return "DefaultEventHandler{" +
                 "priority=" + priority +
                 '}';
     }

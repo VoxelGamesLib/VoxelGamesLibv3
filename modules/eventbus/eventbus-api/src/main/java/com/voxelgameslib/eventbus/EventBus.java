@@ -1,5 +1,7 @@
 package com.voxelgameslib.eventbus;
 
+import java.util.function.Consumer;
+
 import com.voxelgameslib.util.Identifier;
 
 /**
@@ -7,11 +9,15 @@ import com.voxelgameslib.util.Identifier;
  */
 public interface EventBus {
 
+    <T> EventHandler<T> subscribe(Class<T> clazz, Consumer<T> handler);
+
+    <T> EventHandler<T> subscribe(Class<T> clazz, Consumer<T> handler, Priority priority);
+
     void subscribe(Object object);
 
     void unsubscribe(Object object);
 
-    void post(Object event);
+    <T> void post(T event);
 
     Identifier getIdentifier();
 

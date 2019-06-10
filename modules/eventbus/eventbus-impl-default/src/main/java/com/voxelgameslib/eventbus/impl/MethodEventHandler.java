@@ -6,10 +6,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.Method;
 
+import com.voxelgameslib.eventbus.Priority;
+
 /**
  * Invokes a {@link Method} to dispatch an event.
  */
-public class MethodEventHandler<T> extends EventHandler<T> {
+public class MethodEventHandler<T> extends DefaultEventHandler<T> {
 
     private final Object object;
     private final Method method;

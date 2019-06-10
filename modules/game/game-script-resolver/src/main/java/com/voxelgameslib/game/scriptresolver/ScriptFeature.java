@@ -9,7 +9,7 @@ import com.voxelgameslib.util.Identifier;
 
 public class ScriptFeature extends FeatureImpl implements GraalScriptContextHolder {
 
-    private Context context;
+    private Context context;//TODO we need to close this context somewhere
 
     public ScriptFeature(Identifier identifier) {
         super(identifier);
@@ -33,6 +33,5 @@ public class ScriptFeature extends FeatureImpl implements GraalScriptContextHold
     @Override
     public void load(GameInstance gameInstance) {
         super.load(gameInstance);
-        closeContext();
     }
 }

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.voxelgameslib.util.Identifier;
+import com.voxelgameslib.eventbus.EventHandler;
+import com.voxelgameslib.eventbus.Priority;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,7 +71,7 @@ class EventBusTest {
     @Test
     void testRegister_functional_happyday() {
         List<Event> events = new ArrayList<>();
-        eventBus.subscribe(Event.class, events::add, EventHandler.Priority.NORMAL);
+        eventBus.subscribe(Event.class, events::add, Priority.NORMAL);
         Event e1 = new Event();
         eventBus.post(e1);
         Event e2 = new Event();
@@ -81,7 +82,7 @@ class EventBusTest {
     @Test
     void testUnregister_functional_happyday() {
         List<Event> events = new ArrayList<>();
-        EventHandler<Event> handler = eventBus.subscribe(Event.class, events::add, EventHandler.Priority.NORMAL);
+        EventHandler<Event> handler = eventBus.subscribe(Event.class, events::add, Priority.NORMAL);
         Event e1 = new Event();
         eventBus.post(e1);
         eventBus.unsubscribe(Event.class, handler); // nastly, but I don't care rn
