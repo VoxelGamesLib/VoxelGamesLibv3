@@ -9,6 +9,7 @@ const type = GameTypeBuilder.of(Identifier.ofVGL("TestGameType"))
             //.withFeature(Identifier.ofVGL("TestFeature"), (feature) => feature.setTest("test"))
             .build()
     )
+    .withPhase(Identifier.ofVGL("TestPhase2"))
     .build();
 
 type; // return
